@@ -28,16 +28,17 @@ const globalSchema = new schema({
 	data:[DataSchema]
 })*/
 const vestSchema = new schema({
-	giletid:{type: String, required: true},
+	idUser:{type: String, required: true},
 	date:{type: String, required: true},
 	typeId:{type: String, required: true},
 	sensor:[SensorSchema]
 })
 
-const model = mongoose.model("user", user);
-router.get('/getuser', function(req, res) {
+const model = mongoose.model("userdata", vestSchema);
+const modelUser = mongoose.model("user", user);
+router.get('/getUsers', function(req, res) {
 	try{
-		model.find({}, function (err, data) {
+		modelUser.find({}, function (err, data) {
 		if (err) {
 		   throw err
 		}
@@ -48,10 +49,8 @@ router.get('/getuser', function(req, res) {
 		console.log(e)
 		//res.send({data : e})
 	}
-	
 })
-const modelUser = mongoose.model("userdata", vestSchema);
-router.get('/getUserData/:id', function(req, res) {
+router.get('/getUser/:id', function(req, res) {
 	try{
 		modelUser.find({"giletid": req.params.id.toString().replace(':','')}, function (err, data) {
 		if (err) {
@@ -66,39 +65,49 @@ router.get('/getUserData/:id', function(req, res) {
 	}
 	
 })
+
+router.get('/getUserData/:id', function(req, res) {
+	console.log(req.params.id)
+	try{
+		model.find({"idUser": req.params.id.toString().replace(':','')}, function (err, data) {
+		if (err) {
+		   throw err
+		}
+		res.send({data : data})
+		})
+	}
+	catch(e){
+		console.log(e)
+	}
+	
+})
 router.post('/setData', function(req, res) {
-    //var id = parseInt(req.params.id)
     console.log("connected")
 	try{
 		let giletid =  req.body.giletid
-		console.log("data:", req.body)
-	req.body.global.forEach(function(global){
-		let date = req.body.global.date
-		global.data.forEach(function(data){
-			let event = new model({giletid : giletid,
-									date : global.date,
-									typeId : data.typeId,
-									sensor : data.sensor
-									})
-			//console.log(event, model)
-
-			
-			// model.find({}, function(err,data){
-			// 	console.log('Err:'+ err)
-			// 	console.log('data:'+ data)
-			// })
-
-			 event.save(function(err){
-			 	if (err){
-			 		console.log(err)
-			 		throw err
-			 	}
-			 	console.log('saved')
-			 })
-			//console.log(event)
-		})})
-
-
+		modelUser.find({"giletid": giletid}, function (err, id) {
+			if (err) {
+			   throw err
+			}
+			console.log("data:", req.body)
+			req.body.global.forEach(function(global){
+				let date = req.body.global.date
+				global.data.forEach(function(data){
+					let event = new model({idUser : id.idUser,
+											date : global.date,
+											typeId : data.typeId,
+											sensor : data.sensor
+											})
+					 event.save(function(err){
+					 	if (err){
+					 		console.log(err)
+					 		throw err
+					 	}
+					 	console.log('saved')
+					 })
+					//console.log(event)
+				})})
+			})
 	}
 	catch(e){
 		console.log(e)
