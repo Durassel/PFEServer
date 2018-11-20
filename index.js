@@ -36,6 +36,6 @@ app.use('/', async (req, res) => {
 // Call error handlers
 app.use(errorHandler)
 
-app.listen(process.env.WEB_PORT, () => {
+app.listen(process.env.WEB_PORT || 3005 , () => {
   console.log(`App is listening on port ${process.env.WEB_PORT}`)
 })

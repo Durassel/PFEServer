@@ -9,6 +9,26 @@ const getUserByIdGilet = async (id) => {
 	return usersDao.getUserByIdGilet(id)
 }
 
+const userLogin = async (login) => {
+  return usersDao.userLogin(login)
+}
+
+const addUser = async (data) => {
+  return usersDao.addUser(data)
+}
+
+const delUser = async (id) => {
+  return usersDao.delUser(id)
+}
+
+const chgGilet = async (data) => {
+  return usersDao.chgGilet(data)
+}
+
+const chgUser = async (data) => {
+  return usersDao.chgUser(data)
+}
+
 module.exports = {
-  getUsers, getUserByIdGilet
+  getUsers, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser
 }
