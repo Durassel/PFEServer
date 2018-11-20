@@ -63,4 +63,12 @@ router.delete('/delUser', async (req, res, next) =>{
   }
 })
 
+router.put('/chgPassword', async (req, res, next) =>{
+  try {
+    res.send(await users.chgPassword(req.body))
+  } catch (err) {
+    return next(err)
+  }
+})
+
 module.exports = router

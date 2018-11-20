@@ -29,6 +29,10 @@ const chgUser = async (data) => {
   return usersDao.chgUser(data)
 }
 
+const chgPassword = async (data) => {
+  return usersDao.chgPassword(data)
+}
+
 module.exports = {
-  getUsers, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser
+  getUsers, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser, chgPassword
 }

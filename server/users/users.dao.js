@@ -6,7 +6,8 @@ const EmptyResultError = require('../utils/DatabaseError').EmptyResultError
 const schema = mongoose.Schema;
 const user = new schema({
 	idUser   :{type: String, required: true},
-	giletid  :{type: String, required: true},
+	giletid  :{type: String, required: false},
+	password  :{type: String, required: false},
 	job  :{type: String, required: true},
 	idManager:{type: String, required: false}
 })
@@ -31,8 +32,7 @@ let userLogin = async (login) => {
 	    try {
 	    	modelUser.findOne({"idUser": login.idUser,"password": login.password}, function (err, data) {
 	    		if (data.length < 1) { resolve({"login": false}) }
-
-	      		resolve({"login": /*data[0].job*/true})
+	      		resolve({"login": data.job})
 			})
 	    } catch (e) {
 	      reject(new DatabaseRequestError("userLogin", e.message))
@@ -56,9 +56,9 @@ let getUserByIdGilet = async (id) => {
 let chgUser = async (chgData) => {
 	return new Promise((resolve, reject) => {
 	    try {
-	    	modelUser.findOne({"idUser": chgData.idUser,"password": logchgDatain.password}, function (err, chgUser) {
+	    	modelUser.findOne({"idUser": chgData.idUser}, function (err, chgUser) {
 	    		if (chgUser.length === 1) { 
-	    			chgUser.password = chgData.password
+	    			chgUser.giletid = chgData.giletid
 	    			chgUser.job = chgData.job
 	    			chgUser.save(function (err) {
 					   if (err) throw err
@@ -76,12 +76,10 @@ let chgUser = async (chgData) => {
 let chgGilet = async (chgData) => {
 	return new Promise((resolve, reject) => {
 	    try {
-
-	    	modelUser.findOne({"idUser": chgData.idUser,"password": chgData.password}, function (err, event) {
+	    	modelUser.findOne({"idUser": chgData.idUser}, function (err, event) {
 	    		if (!event) {resolve({"result": "Error"})}
 	    		else if(event.job === "1"){
-	    			event.password = chgData.password
-	    			console.log("after: ",event.password)
+	    			event.giletid = chgData.giletid
 	    			event.save(function (err) {
 					   if (err) throw err
 					})
@@ -131,6 +129,26 @@ let delUser = async (id) => {
 	    }
 	})
 }
+
+let chgPassword = async (chgData) => {
+	return new Promise((resolve, reject) => {
+	    try {
+	    	modelUser.findOne({"idUser": chgData.idUser}, function (err, event) {
+	    		if (!event) {resolve({"result": "Error"})}
+	    		else{
+	    			event.password = chgData.password
+	    			event.save(function (err) {
+					   if (err) throw err
+					})
+	    			resolve({"result": "Operation done"})
+		    	}
+			})
+	    } catch (e) {
+	      reject(new DatabaseRequestError("userLogin", e.message))
+	    }
+	})
+}
+
 module.exports = {
-  getUsers, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser
+  getUsers, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser, chgPassword
 }
