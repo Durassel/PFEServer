@@ -6,7 +6,23 @@ const getData = async () => {
 }
 
 const getDataByIdUser = async (id) => {
-	return dataDao.getDataByIdUser(id)
+	//return await dataDao.getDataByIdUser(id)
+	try {
+		let data = await dataDao.howTo(id)
+		for (let i in data) {
+				let element = data[i]
+				const elementName = await dataDao.getSensor(element.typeId)
+				element.typeId = elementName.name
+				console.log("element: ",element.typeId)
+			}
+			console.log(data)
+			return data
+	} catch(e) {
+    		if (e instanceof EmptyResultError) { 
+    			// return pas de results
+    		}
+		throw e 
+	}	
 }
 
 const setData = async (data) => {

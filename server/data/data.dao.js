@@ -21,7 +21,13 @@ const dataSchema = new schema({
 	sensors:[sensorSchema]
 }, { collection: 'data' })
 
+const sensorsSchema = new schema({
+	typeId :{type: String, required: true},
+	name :{type: String, required: true}
+})
+
 const modelData = mongoose.model("data", dataSchema);
+const sensorData = mongoose.model("sensor", sensorsSchema);
 
 let getData = async () => {
 	return new Promise((resolve, reject) => {
@@ -36,11 +42,26 @@ let getData = async () => {
 	})
 }
 
+let howTo = async function (id) {
+	return await modelData.find({"idUser": id}).exec()
+}
+
+let getSensor = async function (typeId) {
+	return await sensorData.findOne({"typeId": typeId}).exec()
+}
+
 let getDataByIdUser = async (id) => {
 	return new Promise((resolve, reject) => {
 	    try {
 	    	modelData.find({"idUser": id}, function (err, data) {
 	    		if (data.length < 1) { reject(new EmptyResultError("getDataByIdUser")) }
+	    		data.forEach(function(element){
+	    			sensorData.findOne({"typeId": element.typeId}, function(err,elementData){
+	    				element.typeId = elementData.name
+	    				//console.log(element)
+	    			})
+	    		})
+	    		console.log("data: ",data)
 	      		resolve(data)
 			})
 	    } catch (e) {
@@ -79,5 +100,5 @@ let setData = async (data) => {
 }
 
 module.exports = {
-  getData, getDataByIdUser, setData
+  getData, getDataByIdUser, setData, howTo,getSensor
 }

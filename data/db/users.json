@@ -1,2 +1,5 @@
-{"_id":{"$oid":"5bf14c3dd300953828a3d91b"},"idUser":"9512357","giletid":"0123456789","idManager":"357159"}
-{"_id":{"$oid":"5bf14caed300953828a3d91c"},"idUser":"357159","giletid":"9876543210"}
+{"_id":{"$oid":"5bf14c3dd300953828a3d91b"},"idUser":"9512357","giletid":"0123456789","job":"1"}
+{"_id":{"$oid":"5bf14caed300953828a3d91c"},"idUser":"357159","giletid":"9876543210","job":"1"}
+{"_id":{"$oid":"5bf282d49b01f5262cca3d60"},"idUser":"fredoCodeur","password":"sopra","job":"2"}
+{"_id":{"$oid":"5bf283239b01f5262cca3d61"},"idUser":"bob","password":"123","job":"0"}
+{"_id":{"$oid":"5bf43e9214db8e0d78fcee2f"},"idUser":"45","job":"2","password":"a","__v":{"$numberInt":"0"}}
