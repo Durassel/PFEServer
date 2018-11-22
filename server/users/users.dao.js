@@ -1,152 +1,35 @@
-const mongoose = require('mongoose')
-const DatabaseConnectionError = require('../utils/DatabaseError').DatabaseConnectionError
-const DatabaseRequestError = require('../utils/DatabaseError').DatabaseRequestError
-const EmptyResultError = require('../utils/DatabaseError').EmptyResultError
+const mongo = require('../mongo')
 
-const schema = mongoose.Schema;
-const user = new schema({
-	idUser   :{type: String, required: true},
-	giletid  :{type: String, required: false},
-	password  :{type: String, required: false},
-	job  :{type: String, required: true},
-	idManager:{type: String, required: false}
-})
-
-const modelUser = mongoose.model("users", user);
-
-let getUsers = async () => {
-	return new Promise((resolve, reject) => {
-	    try {
-	    	modelUser.find({"job": "1"}, function (err, data) {
-	    		if (data.length < 1) { reject(new EmptyResultError("getUsers")) }
-	      		resolve(data)
-			})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("getUsers", e.message))
-	    }
-	})
+async function getUsers () {
+  	return mongo.all("users", {})
 }
 
-let userLogin = async (login) => {
-	return new Promise((resolve, reject) => {
-	    try {
-	    	modelUser.findOne({"idUser": login.idUser,"password": login.password}, function (err, data) {
-	    		if (data.length < 1) { resolve({"login": false}) }
-	      		resolve({"login": data.job})
-			})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("userLogin", e.message))
-	    }
-	})
+async function getUserByIdGilet (data) {
+  	return mongo.get("users", data)
 }
 
-let getUserByIdGilet = async (id) => {
-	return new Promise((resolve, reject) => {
-	    try {
-	    	modelUser.findOne({"giletid": id}, function (err, data) {
-	    		if (data.length < 1) { reject(new EmptyResultError("getUserByIdGilet")) }
-	      		resolve(data)
-			})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("getUserByIdGilet", e.message))
-	    }
-	})
+async function userLogin (data) {
+  	return mongo.get("users", data)
 }
 
-let chgUser = async (chgData) => {
-	return new Promise((resolve, reject) => {
-	    try {
-	    	modelUser.findOne({"idUser": chgData.idUser}, function (err, chgUser) {
-	    		if (chgUser.length === 1) { 
-	    			chgUser.giletid = chgData.giletid
-	    			chgUser.job = chgData.job
-	    			chgUser.save(function (err) {
-					   if (err) throw err
-					})
-	    			resolve({"result": "Operation done"})
-	    		}
-	      		resolve({"result": "error"})
-			})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("userLogin", e.message))
-	    }
-	})
+async function chgUser (id, data) {
+  	return mongo.update("users", id, data)
 }
 
-let chgGilet = async (chgData) => {
-	return new Promise((resolve, reject) => {
-	    try {
-	    	modelUser.findOne({"idUser": chgData.idUser}, function (err, event) {
-	    		if (!event) {resolve({"result": "Error"})}
-	    		else if(event.job === "1"){
-	    			event.giletid = chgData.giletid
-	    			event.save(function (err) {
-					   if (err) throw err
-					})
-	    			resolve({"result": "Operation done"})
-		    	}
-		    	else{
-		    		resolve({"result": "Operation not allowed"})
-		    		
-	    		}
-	      		
-			})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("userLogin", e.message))
-	    }
-	})
+async function chgGilet (id, data) {
+  	return mongo.update("users", id, data)
 }
 
-let addUser = async (data) => {
-	return new Promise((resolve, reject) => {
-	    try {
-	        let newUser = new modelUser({
-			idUser   : data.idUser,
-			giletid  : data.giletid,
-			job      : data.job
-			/*idManager:{type: String, required: false}*/
-			})
-	        newUser.save(function(err) {
-	          	if (err) { 
-	          		reject(new DatabaseRequestError("addUser", err)) }
-      			resolve({"result": "The new user has been added."})
-	    	})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("addUser", e.message))
-	    }
-	})
+async function addUser (data) {
+  	return mongo.insert("users", data)
 }
 
-let delUser = async (id) => {
-	return new Promise((resolve, reject) => {
-	    try {
-	    	modelUser.remove({idUser: id}, function (err) {
-			  	if (err) { reject(new DatabaseRequestError("addUser", err)) }
-      			resolve({"result": "The user has been successfully deleted"})
-			})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("delUser", e.message))
-	    }
-	})
+async function delUser (data) {
+  	return mongo.remove("users", data)
 }
 
-let chgPassword = async (chgData) => {
-	return new Promise((resolve, reject) => {
-	    try {
-	    	modelUser.findOne({"idUser": chgData.idUser}, function (err, event) {
-	    		if (!event) {resolve({"result": "Error"})}
-	    		else{
-	    			event.password = chgData.password
-	    			event.save(function (err) {
-					   if (err) throw err
-					})
-	    			resolve({"result": "Operation done"})
-		    	}
-			})
-	    } catch (e) {
-	      reject(new DatabaseRequestError("userLogin", e.message))
-	    }
-	})
+async function chgPassword (id, data) {
+  	return mongo.update("users", id, data)
 }
 
 module.exports = {

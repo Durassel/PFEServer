@@ -1,36 +1,42 @@
 let usersDao = require('./users.dao')
-const ApiError = require('../utils/ApiError').ApiError
+let model = require('../model')
 
-const getUsers = async () => {
-  return usersDao.getUsers()
+async function getUsers () {
+  	return usersDao.getUsers()
 }
 
-const getUserByIdGilet = async (id) => {
-	return usersDao.getUserByIdGilet(id)
+async function getUserByIdGilet (data) {
+	return usersDao.getUserByIdGilet({ "giletid" : data })
 }
 
-const userLogin = async (login) => {
-  return usersDao.userLogin(login)
+async function userLogin (data) {
+  	return usersDao.userLogin({ "idUser": data.idUser, "password": data.password })
 }
 
-const addUser = async (data) => {
-  return usersDao.addUser(data)
+async function addUser (data) {
+	let event = model.users({
+		idUser   : data.idUser,
+		giletid  : data.giletid,
+		job      : data.job
+	})
+
+	return usersDao.addUser(event)
 }
 
-const delUser = async (id) => {
-  return usersDao.delUser(id)
+async function delUser (data) {
+  	return usersDao.delUser({idUser: data})
 }
 
-const chgGilet = async (data) => {
-  return usersDao.chgGilet(data)
+async function chgGilet (data) {
+ 	return usersDao.chgGilet({ 'idUser' : data.idUser, 'job' : '1' }, { 'giletid' : data.giletid })
 }
 
-const chgUser = async (data) => {
-  return usersDao.chgUser(data)
+async function chgUser (data) {
+  	return usersDao.chgUser({ 'idUser' : data.idUser }, { 'giletid' : data.giletid, 'job' : data.job })
 }
 
-const chgPassword = async (data) => {
-  return usersDao.chgPassword(data)
+async function chgPassword (data) {
+  	return usersDao.chgPassword({ 'idUser' : data.idUser }, { 'password' : data.password })
 }
 
 module.exports = {

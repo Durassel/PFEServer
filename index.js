@@ -4,20 +4,11 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const logger = require('./server/utils/logger')
-const mongoose = require('mongoose')
 const errorHandler = require('./server/utils/errors').errorHandler
 
 require('dotenv').config()
 
 let app = express()
-
-// Database connection
-mongoose.connect('mongodb://localhost/pfe', { useNewUrlParser: true })
-let database = mongoose.connection;
-database.on('error', console.error.bind(console, 'Erreur lors de la connexion'));
-database.once('open', function (){
-   console.log("Connecté à la base de données");
-});
 
 app.use(morgan('dev', { 'stream': logger.stream }))
 app.use(helmet())
