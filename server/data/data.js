@@ -8,7 +8,8 @@ async function getData () {
 
 async function getDataByIdUser (id) {
 	//return await dataDao.getDataByIdUser(id)
-	dataDao.getDataByIdUser(id).then(function(data) {
+	await dataDao.getDataByIdUser(id).then(function(data) {
+		console.log(data)
 		for (let i in data) {
 			let element = data[i]
 

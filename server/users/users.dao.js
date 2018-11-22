@@ -1,7 +1,7 @@
 const mongo = require('../mongo')
 
 async function getUsers () {
-  	return mongo.all("users", {})
+  	return mongo.all("users", {"job":"1"})
 }
 
 async function getUserByIdGilet (data) {

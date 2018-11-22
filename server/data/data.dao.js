@@ -2,11 +2,12 @@ const mongo = require('../mongo')
 const usersDao = require('../users/users.dao')
 
 async function getData () {
-  	return mongo.all("data", {})
+  	return await mongo.all("data", {})
 }
 
 async function getDataByIdUser (id) {
-  	return mongo.all("data", {"idUser": id})
+	console.log("id: ",id)
+  	return await mongo.all("data", {"idUser": id})
 }
 
 async function getSensor (typeId) {
