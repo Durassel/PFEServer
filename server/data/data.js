@@ -1,5 +1,6 @@
 let dataDao = require('./data.dao')
 let usersDao = require('../users/users.dao')
+const sensorsDao = require('../sensors/sensors.dao')
 let model = require('../model')
 
 async function getData () {
@@ -12,7 +13,7 @@ async function getDataByIdUser (id) {
 	for (let i in data) {
 		let element = data[i]
 
-		await dataDao.getSensor({ "typeId" : element.typeId }).then(function(elementName) {
+		await sensorsDao.getSensor({ "typeId" : element.typeId }).then(function(elementName) {
 			element.typeId = elementName[0].name
 		})
 	}
