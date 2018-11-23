@@ -7,24 +7,17 @@ async function getData () {
 }
 
 async function getDataByIdUser (id) {
-	await dataDao.getDataByIdUser({ "idUser": id }).then(async (data) => {
-		await dataDao.getSensor({}).then(async (sensors)  => {
-			console.log("Get sensor")
-			console.log(sensors)
+	let data = await dataDao.getDataByIdUser({ "idUser": id })//.then(function(data) {
+	
+	for (let i in data) {
+		let element = data[i]
 
-			data.forEach(function(element) {
-				sensors.forEach(function(sensor) {
-					if (element.typeId === sensor.typeId) {
-						console.log("Type id : " + element.typeId + ' / name : ' + sensor.name)
-						element.typeId = sensor.name
-					}
-				})
-			})
-
-			console.log("Data : " + JSON.stringify(data))
-			return data
+		await dataDao.getSensor({ "typeId" : element.typeId }).then(function(elementName) {
+			element.typeId = elementName[0].name
 		})
-	})
+	}
+
+	return data
 }
 
 async function setData (data) {
