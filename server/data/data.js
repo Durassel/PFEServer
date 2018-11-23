@@ -8,19 +8,16 @@ async function getData () {
 
 async function getDataByIdUser (id) {
 	//return await dataDao.getDataByIdUser(id)
-	await dataDao.getDataByIdUser(id).then(function(data) {
-		console.log(data)
-		for (let i in data) {
+	let data = await dataDao.getDataByIdUser(id)//.then(function(data) {
+		for(let i in data) {
 			let element = data[i]
 
-			dataDao.getSensor(element.typeId).then(function(elementName) {
-				element.typeId = elementName.name
-				console.log("element: ",element.typeId)
+			await dataDao.getSensor(element.typeId).then(function(elementName) {
+				element.typeId = elementName[0].name
 			})
 		}
-		console.log(data)
 		return data
-	})
+	//})
 }
 
 async function setData (data) {
