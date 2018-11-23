@@ -21,5 +21,5 @@ async function remove (data) {
 }
 
 module.exports = {
-  getAll, get, update, add, remove
+  	getAll, get, update, add, remove
 }
