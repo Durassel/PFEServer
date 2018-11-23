@@ -1,16 +1,20 @@
 let usersDao = require('./users.dao')
 let model = require('../model')
 
-async function getUsers () {
-  	return usersDao.getUsers()
+async function getAllUsers () {
+  	return usersDao.getAll({})
+}
+
+async function getUsersByJob (data) {
+	return usersDao.getAll({ "job" : data })
 }
 
 async function getUserByIdGilet (data) {
-	return usersDao.getUserByIdGilet({ "giletid" : data })
+	return usersDao.get({ "giletid" : data })
 }
 
 async function userLogin (data) {
-  	return usersDao.userLogin({ "idUser": data.idUser, "password": data.password })
+  	return usersDao.get({ "idUser": data.idUser, "password": data.password })
 }
 
 async function addUser (data) {
@@ -20,25 +24,25 @@ async function addUser (data) {
 		job      : data.job
 	})
 
-	return usersDao.addUser(event)
+	return usersDao.add(event)
 }
 
 async function delUser (data) {
-  	return usersDao.delUser({idUser: data})
+  	return usersDao.remove({ idUser : data })
 }
 
 async function chgGilet (data) {
- 	return usersDao.chgGilet({ 'idUser' : data.idUser, 'job' : '1' }, { 'giletid' : data.giletid })
+ 	return usersDao.update({ 'idUser' : data.idUser, 'job' : '1' }, { 'giletid' : data.giletid })
 }
 
 async function chgUser (data) {
-  	return usersDao.chgUser({ 'idUser' : data.idUser }, { 'giletid' : data.giletid, 'job' : data.job })
+  	return usersDao.update({ 'idUser' : data.idUser }, { 'giletid' : data.giletid, 'job' : data.job })
 }
 
 async function chgPassword (data) {
-  	return usersDao.chgPassword({ 'idUser' : data.idUser }, { 'password' : data.password })
+  	return usersDao.update({ 'idUser' : data.idUser }, { 'password' : data.password })
 }
 
 module.exports = {
-  getUsers, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser, chgPassword
+  getAllUsers, getUsersByJob, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser, chgPassword
 }

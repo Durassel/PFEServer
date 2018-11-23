@@ -7,7 +7,7 @@ async function getData () {
 }
 
 async function getDataByIdUser (id) {
-	let data = await dataDao.getDataByIdUser({ "idUser": id })//.then(function(data) {
+	let data = await dataDao.getAll({ "idUser": id })//.then(function(data) {
 	
 	for (let i in data) {
 		let element = data[i]
@@ -21,9 +21,9 @@ async function getDataByIdUser (id) {
 }
 
 async function setData (data) {
-	let giletid =  data.giletid
-	usersDao.getUserByIdGilet(giletid).then(function(id) {
-		let idUser =  id.idUser
+	let giletid = data.giletid
+	usersDao.getAll({ "giletid" : giletid }).then(function(id) {
+		let idUser = id.idUser
 
 		data.global.forEach(function(global) {
 			let date = data.global.date
@@ -36,7 +36,7 @@ async function setData (data) {
 					sensors : data.sensors
 				})
 
-				return dataDao.setData(event)
+				return dataDao.set(event)
 			})
 		})
 	})

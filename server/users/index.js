@@ -4,7 +4,7 @@ const users = require('./users')
 
 router.get('/', async (req, res, next) => {
   try {
-    res.send(await users.getUsers())
+    res.send(await users.getUsersByJob("1"))
   } catch (err) {
     return next(err)
   }
