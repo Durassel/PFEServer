@@ -14,7 +14,13 @@ async function getUserByIdGilet (data) {
 }
 
 async function userLogin (data) {
-  	return usersDao.get({ "idUser": data.idUser, "password": data.password })
+	let res = false
+	usersDao.get({ "idUser": data.idUser, "password": data.password }).then((ret) => {
+		res = ret
+	})
+
+	console.log("Res : " + JSON.stringify(res))
+	return res
 }
 
 async function addUser (data) {

@@ -21,6 +21,9 @@ app.use(express.static('data/images'))
 require('./server/app')(app)
 
 app.use('/', async (req, res) => {
+  // res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   res.end('App is running')
 })
 
