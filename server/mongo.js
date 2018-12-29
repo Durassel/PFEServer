@@ -24,15 +24,15 @@ let insert = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) { reject(new DatabaseRequestError(query, err)) }
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.insertOne(query, function(error, result) {
-          if (error) { reject(new DatabaseRequestError(query, error)) }
-          resolve(result)
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          resolve(result.ops[0])
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(query, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -42,15 +42,15 @@ let update = (name, id, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) { reject(new DatabaseRequestError(query, err)) }
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.findOneAndUpdate(id, { $set: query }, { upsert: true }, function(error, result) {
-          if (error) { reject(new DatabaseRequestError(query, error)) }
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
           resolve(result.value)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(query, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -60,15 +60,15 @@ let remove = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) { reject(new DatabaseRequestError(query, err)) }
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.deleteOne(query, function(error, result) {
-          if (error) { reject(new DatabaseRequestError(query, error)) }
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
           resolve(result)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(query, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -78,16 +78,16 @@ let get = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) { reject(new DatabaseRequestError(query, err)) }
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.findOne(query, function(error, result) {
-          if (error) { reject(new DatabaseRequestError(query, error)) }
-          if (!result) { reject(new EmptyResultError(query)) }
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          // if (!result) { reject(new EmptyResultError(JSON.stringify(query))) }
           resolve(result)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(query, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -97,16 +97,16 @@ let all = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) { reject(new DatabaseRequestError(query, err)) }
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.find(query).toArray(function(error, result) {
-          if (error) { reject(new DatabaseRequestError(query, error)) }
-          if (!result.length) { reject(new EmptyResultError(query)) }
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          // if (!result.length) { reject(new EmptyResultError(JSON.stringify(query))) }
           resolve(result)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(query, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }

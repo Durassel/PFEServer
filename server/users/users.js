@@ -1,5 +1,6 @@
 let usersDao = require('./users.dao')
-let model = require('../model')
+let model    = require('../model')
+let mongoose = require('mongoose')
 
 async function getAllUsers () {
   	return usersDao.getAll({})
@@ -13,14 +14,12 @@ async function getUserByIdGilet (data) {
 	return usersDao.get({ "giletid" : data })
 }
 
-async function userLogin (data) {
-	let res = false
-	usersDao.get({ "idUser": data.idUser, "password": data.password }).then((ret) => {
-		res = ret
-	})
+async function getUserByIdUser (data) {
+	return usersDao.get({ "idUser" : data })
+}
 
-	console.log("Res : " + JSON.stringify(res))
-	return res
+async function login (data) {
+	return usersDao.get({ "idUser": data.idUser, "password": data.password })
 }
 
 async function addUser (data) {
@@ -33,8 +32,8 @@ async function addUser (data) {
 	return usersDao.add(event)
 }
 
-async function delUser (data) {
-  	return usersDao.remove({ idUser : data })
+async function delUserById (data) {
+  	return usersDao.remove({ "_id": mongoose.Types.ObjectId(data.id) })
 }
 
 async function chgGilet (data) {
@@ -50,5 +49,5 @@ async function chgPassword (data) {
 }
 
 module.exports = {
-  getAllUsers, getUsersByJob, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser, chgPassword
+  getAllUsers, getUsersByJob, getUserByIdGilet, getUserByIdUser, login, addUser, delUserById, chgGilet, chgUser, chgPassword
 }
