@@ -2,52 +2,77 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema;
 
 // Schema definition
-const user = new schema({
-  idUser   :{type: String, required: true},
-  giletid  :{type: String, required: false},
+const userSchema = new schema({
+  username :{type: String, unique: true, required: true},
   password :{type: String, required: false},
-  job      :{type: String, required: true},
-  idManager:{type: String, required: false}
+  teamID   :{type: mongoose.Schema.ObjectId, ref: 'teams', required: false},
+  jobID    :{type: mongoose.Schema.ObjectId, ref: 'jobs', required: true}
 }, { collection: 'users' })
 
-const sensorSchema = new schema({
-  x1:{type: String, required: true},
-  y1:{type: String, required: true},
-  z1:{type: String, required: true},
-  x2:{type: String, required: true},
-  y2:{type: String, required: true},
-  z2:{type: String, required: true}
-})
+const teamSchema = new schema({
+  name   :{type: String, unique: true, required: true}
+}, { collection: 'teams' })
 
-const dataSchema = new schema({
-  idUser :{type: String, required: true},
-  date   :{type: String, required: true},
-  typeId :{type: String, required: true},
-  sensors:[sensorSchema]
-}, { collection: 'data' })
+const jacketSchema = new schema({
+  userID    :{type: mongoose.Schema.ObjectId, ref: 'users', required: true},
+  identifier:{type: String, unique: true, required: true}
+}, { collection: 'jackets' })
+
+const jobSchema = new schema({
+  name   :{type: String, unique: true, required: true}
+}, { collection: 'jobs' })
 
 const sensorsSchema = new schema({
-  typeId:{type: String, required: true},
-  name  :{type: String, required: true}
+  type   :{type: String, unique: true, required: true},
+  active :{type: Boolean, required: true}
+})
+
+const coordinateSchema = new schema({
+  x:{type: String, required: true},
+  y:{type: String, required: true},
+  z:{type: String, required: true},
 }, { collection: 'sensors' })
 
-// Model definition
-const modelData = mongoose.model("data", dataSchema);
-const modelUser = mongoose.model("users", user);
-const modelSensor = mongoose.model("sensors", sensorsSchema);
+const dataSchema = new schema({
+  sensorID   :{type: mongoose.Schema.ObjectId, ref: 'sensors', required: true},
+  userID     :{type: mongoose.Schema.ObjectId, ref: 'users', required: true},
+  date       :{type: Date, required: true},
+  coordinates:[coordinateSchema]
+}, { collection: 'data' })
 
-let data = (d) => {
-  return new modelData(d);
-}
+// Model definition
+const modelUser       = mongoose.model("users", userSchema, "users");
+const modelTeam       = mongoose.model("teams", teamSchema, "teams");
+const modelJacket     = mongoose.model("jackets", jacketSchema, "jackets");
+const modelJob        = mongoose.model("jobs", jobSchema, "jobs");
+const modelSensor     = mongoose.model("sensors", sensorsSchema, "sensors");
+const modelData       = mongoose.model("data", dataSchema, "data");
 
 let users = (d) => {
   return new modelUser(d);
+}
+
+let teams = (d) => {
+  return new modelTeam(d);
+}
+
+let jackets = (d) => {
+  return new modelJacket(d);
+}
+
+let jobs = (d) => {
+  return new modelJob(d);
 }
 
 let sensors = (d) => {
   return new modelSensor(d);
 }
 
+let data = (d) => {
+  return new modelData(d);
+}
+
 module.exports = {
-  data, users, sensors
+  modelUser, modelTeam, modelJob, modelSensor, modelData, modelJacket,
+  users, teams, jobs, sensors, data, jackets
 }

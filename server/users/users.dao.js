@@ -8,18 +8,26 @@ async function get (data) {
   	return mongo.get("users", data)
 }
 
+async function set (data) {
+  	return mongo.insert("users", data)
+}
+
 async function update (id, data) {
   	return mongo.update("users", id, data)
 }
 
-async function add (data) {
-  	return mongo.insert("users", data)
+async function updateAll (id, data) {
+  	return mongo.updateAll("users", id, data)
 }
 
 async function remove (data) {
   	return mongo.remove("users", data)
 }
 
+async function join (model, data) {
+  	return mongo.join("users", model, data)
+}
+
 module.exports = {
-  	getAll, get, update, add, remove
+  	getAll, get, set, update, updateAll, remove, join
 }

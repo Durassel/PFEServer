@@ -1,24 +1,13 @@
-let dataDao = require('./data.dao')
+let dataDao  = require('./data.dao')
 let usersDao = require('../users/users.dao')
-let sensorsDao = require('../sensors/sensors.dao')
-let model = require('../model')
+let model    = require('../model')
 
-async function getData () {
+async function getAllData () {
   	return dataDao.getAll({})
 }
 
-async function getDataByIdUser (id) {
-	let data = await dataDao.getAll({ "idUser": id })
-	
-	for (let i in data) {
-		let element = data[i]
-
-		await sensorsDao.getAll({ "typeId" : element.typeId }).then(function(elementName) {
-			element.typeId = elementName[0].name
-		})
-	}
-
-	return data
+async function getDataByUser () {
+	return dataDao.join(model.modelData, { a: { path: 'sensorID', populate: { path: 'typeID', model: model.modelSensor } }, b: { path: 'userID' }, c: "" })
 }
 
 async function setData (data) {
@@ -44,5 +33,5 @@ async function setData (data) {
 }
 
 module.exports = {
-  getData, getDataByIdUser, setData
+  getAllData, getDataByUser, setData
 }

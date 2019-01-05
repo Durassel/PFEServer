@@ -2,18 +2,20 @@ const express = require('express')
 const router = express.Router()
 const data = require('./data')
 
-router.get('/', async (req, res, next) => {
+router.get('/all', async (req, res, next) => {
   try {
-    res.send(await data.getData())
+    res.send(await data.getAllData())
   } catch (err) {
     return next(err)
   }
 })
 
-router.get('/:id', async (req, res, next) => {
-	try {
-    res.send(await data.getDataByIdUser(req.params.id))
-	} catch (err) {
+router.get('/user/:name', async (req, res, next) => {
+  try {
+    let list = await data.getDataByUser()
+    list = list.filter(x => x.userID.username == req.params.name) // Keep only 'Data' from user for example
+    res.send(list)
+  } catch (err) {
     return next(err)
   }
 })

@@ -8,10 +8,10 @@ const router        = express.Router()
 const saltRounds    = 10 // Used by bcrypt
 
 // Configure passport.js to use the local strategy
-passport.use(new LocalStrategy({ usernameField: 'idUser' }, (idUser, password, done) => {
+passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
   try {
     // Find user in the database
-    users.getUserByIdUser(idUser).then(function(user) {
+    users.getUserByUsername(username).then(function(user) {
       if (user === null) {
         return done(null, false);
       } else {
@@ -32,21 +32,20 @@ passport.use(new LocalStrategy({ usernameField: 'idUser' }, (idUser, password, d
 
 // Serialize a user
 passport.serializeUser((user, done) => {
-  done(null, user.idUser);
+  done(null, user.username);
 })
 
 // Deserialize a user
 passport.deserializeUser((id, done) => {
   try {
-    users.getUserByIdUser(id).then(res => done(null, res))
+    users.getUserByUsername(id).then(res => done(null, res))
   } catch (error) {
     done(error, false)
   }
 });
 
 router.get('/logout', async (req, res, next) => {
-  if (req.isAuthenticated()) {
-    // Passport logout
+  if (req.isAuthenticated()) { // Passport logout
     req.logout()
     res.send(true)
   } else {
@@ -63,14 +62,6 @@ router.get('/authrequired', async (req, res, next) => {
   }
 })
 
-router.get('/', async (req, res, next) => {
-  try {
-    res.send(await users.getUsersByJob("1"))
-  } catch (err) {
-    return next(err)
-  }
-})
-
 router.get('/all', async (req, res, next) => {
   try {
     res.send(await users.getAllUsers())
@@ -81,7 +72,37 @@ router.get('/all', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    res.send(await users.getUserByIdGilet(req.params.id))
+    res.send(await users.getUserByUserId(req.params.id))
+  } catch (err) {
+    return next(err)
+  }
+})
+
+router.get('/team/:name', async (req, res, next) => {
+  try {
+    let list = await users.getUsersByTeam()
+    list = list.filter(x => x.teamID.name == req.params.name) // Keep only 'Team 1' users for example
+    res.send(list)
+  } catch (err) {
+    return next(err)
+  }
+})
+
+router.get('/jacket/:name', async (req, res, next) => {
+  try {
+    let list = await users.getUsersByJacket()
+    list = list.filter(x => x.jacketID.name == req.params.name) // Keep only 'Jacket 1' user for example
+    res.send(list)
+  } catch (err) {
+    return next(err)
+  }
+})
+
+router.get('/job/:name', async (req, res, next) => {
+  try {
+    let list = await users.getUsersByJob()
+    list = list.filter(x => x.jobID.name == req.params.name) // Keep only 'member' users for example
+    res.send(list)
   } catch (err) {
     return next(err)
   }
@@ -99,41 +120,25 @@ router.post('/login', async (req, res, next) => {
   }
 })
 
-router.post('/addUser', async (req, res, next) =>{
+router.post('/add', async (req, res, next) =>{
   try {
-    res.send(await users.addUser(req.body))
+    res.send(await users.add(req.body))
   } catch (err) {
     return next(err)
   }
 })
 
-router.put('/chgGilet', async (req, res, next) =>{
+router.put('/update', async (req, res, next) =>{
   try {
-    res.send(await users.chgGilet(req.body))
+    res.send(await users.update(req.body))
   } catch (err) {
     return next(err)
   }
 })
 
-router.put('/chgUser', async (req, res, next) =>{
+router.delete('/delete', async (req, res, next) =>{
   try {
-    res.send(await users.chgUser(req.body))
-  } catch (err) {
-    return next(err)
-  }
-})
-
-router.delete('/delUser', async (req, res, next) =>{
-  try {
-    res.send(await users.delUserById(req.body))
-  } catch (err) {
-    return next(err)
-  }
-})
-
-router.put('/chgPassword', async (req, res, next) =>{
-  try {
-    res.send(await users.chgPassword(req.body))
+    res.send(await users.remove(req.body))
   } catch (err) {
     return next(err)
   }

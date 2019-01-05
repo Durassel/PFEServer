@@ -44,7 +44,25 @@ let update = (name, id, query) => {
       this.database.db.collection(name, function (err, collection) {
         if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
-        collection.findOneAndUpdate(id, { $set: query }, { upsert: true }, function(error, result) {
+        collection.findOneAndUpdate(id, { $set: query }, { upsert: true, new: true }, function(error, result) {
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          resolve(result.value)
+        });
+      });
+    } catch (e) {
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
+    }
+  })
+}
+
+// Update all
+let updateAll = (name, id, query) => {
+  return new Promise((resolve, reject) => {
+    try {
+      this.database.db.collection(name, function (err, collection) {
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
+
+        collection.updateMany(id, { $set: query }, function(error, result) {
           if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
           resolve(result.value)
         });
@@ -111,6 +129,24 @@ let all = (name, query) => {
   })
 }
 
+// set of rows read
+let join = (name, model, pop) => {
+  return new Promise((resolve, reject) => {
+    try {
+      this.database.db.collection(name, function (err, collection) {
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
+
+        model.find({}).populate(pop.a).populate(pop.b).populate(pop.c).exec((err, result) => {
+          if (err) { reject(new DatabaseRequestError(JSON.stringify(pop), err)) }
+          resolve(result)
+        })
+      });
+    } catch (e) {
+      reject(new DatabaseRequestError(JSON.stringify(pop), e.message))
+    }
+  })
+}
+
 try {
   process.nextTick(() => open(process.env.DATABASE_PATH))
 } catch (err) {
@@ -118,5 +154,5 @@ try {
 }
 
 module.exports = {
-  all, get, insert, update, remove
+  all, get, insert, update, updateAll, remove, join
 }

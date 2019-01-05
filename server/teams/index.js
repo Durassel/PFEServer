@@ -1,10 +1,10 @@
 const express = require('express')
-const router = express.Router()
-const sensors = require('./sensors')
+const router  = express.Router()
+const teams   = require('./teams')
 
 router.get('/all', async (req, res, next) => {
   try {
-    res.send(await sensors.getAll())
+    res.send(await teams.getAllTeams())
   } catch (err) {
     return next(err)
   }
@@ -12,7 +12,7 @@ router.get('/all', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
   try {
-    res.send(await sensors.add(req.body))
+    res.send(await teams.add(req.body))
   } catch (err) {
     return next(err)
   }
@@ -20,7 +20,7 @@ router.post('/add', async (req, res, next) => {
 
 router.put('/update', async (req, res, next) =>{
   try {
-    res.send(await sensors.update(req.body))
+    res.send(await teams.update(req.body))
   } catch (err) {
     return next(err)
   }
@@ -28,7 +28,7 @@ router.put('/update', async (req, res, next) =>{
 
 router.delete('/delete', async (req, res, next) =>{
   try {
-    res.send(await sensors.remove(req.body))
+    res.send(await teams.remove(req.body))
   } catch (err) {
     return next(err)
   }
