@@ -12,10 +12,6 @@ async function update (id, data) {
   	return mongo.update("sensors", id, data)
 }
 
-async function remove (data) {
-  	return mongo.remove("sensors", data)
-}
-
 module.exports = {
-  	getAll, set, update, remove
+  	getAll, set, update
 }

@@ -19,7 +19,8 @@ const jacketSchema = new schema({
 }, { collection: 'jackets' })
 
 const jobSchema = new schema({
-  name   :{type: String, unique: true, required: true}
+  name   :{type: String, unique: true, required: true},
+  level  :{type: Number, unique: true, required: true}
 }, { collection: 'jobs' })
 
 const sensorsSchema = new schema({

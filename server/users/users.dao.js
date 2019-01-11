@@ -24,8 +24,8 @@ async function remove (data) {
   	return mongo.remove("users", data)
 }
 
-async function join (model, data) {
-  	return mongo.join("users", model, data)
+async function join (model, query, data) {
+  	return mongo.join("users", model, query, data)
 }
 
 module.exports = {

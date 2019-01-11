@@ -22,7 +22,7 @@ router.get('/user/:name', async (req, res, next) => {
 
 router.post('/set', async (req, res, next) => {
   try {
-    res.send(await data.setData(req.body))
+    res.send(await data.set(req.body))
   } catch(err){
     return next(err)
   } 

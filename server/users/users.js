@@ -1,8 +1,10 @@
-let usersDao   = require('./users.dao')
-let jacketsDao = require('../jackets/jackets.dao')
-let dataDao    = require('../data/data.dao')
-let model      = require('../model')
-let mongoose   = require('mongoose')
+let usersDao     = require('./users.dao')
+let jacketsDao   = require('../jackets/jackets.dao')
+let dataDao      = require('../data/data.dao')
+let model        = require('../model')
+let mongoose     = require('mongoose')
+let bcrypt       = require('bcrypt')
+const saltRounds = 10 // Used by bcrypt
 
 async function getAllUsers () {
   	return usersDao.getAll({})
@@ -13,30 +15,24 @@ async function getUserByUserId (data) {
 }
 
 async function getUserByUsername (data) {
-	return usersDao.get({ "username" : data })
+	return usersDao.join(model.modelUser, { "username" : data }, { a: "jobID", b: "teamID", c: "" })
 }
 
-async function getUsersByTeam () {
-	return usersDao.join(model.modelUser, { a: "jobID", b: "teamID", c: "" })
-}
-
-async function getUsersByJacket () {
-	return usersDao.join(model.modelUser, { a: "jobID", b: "teamID", c: "" })
-}
-
-async function getUsersByJob () {
-	return usersDao.join(model.modelUser, { a: "jobID", b: "teamID", c: { path: 'userID', model: model.modelJacket } })
+async function getAllUsersData () {
+	return usersDao.join(model.modelUser, {}, { a: { path: 'jobID', populate: { path: 'jobID', model: model.modelJob } }, b: { path: 'teamID', populate: { path: 'teamID', model: model.modelTeam } }, c: "" })
 }
 
 async function add (data) {
-	let user = model.users({
-		username: data.username,
-		password: data.password,
-		teamID  : data.teamID,
-		jobID   : data.jobID
-	})
+	bcrypt.hash(data.password, saltRounds).then(function(hash) {
+		let user = model.users({
+			username: data.username,
+			password: hash,
+			teamID  : data.teamID,
+			jobID   : data.jobID
+		})
 
-	return usersDao.set(user)
+		return usersDao.set(user)
+	});
 }
 
 async function update (data) {
@@ -52,5 +48,5 @@ async function remove (data) {
 }
 
 module.exports = {
-  getAllUsers, getUserByUserId, getUserByUsername, getUsersByTeam, getUsersByJacket, getUsersByJob, add, update, remove
+  getAllUsers, getUserByUserId, getUserByUsername, getAllUsersData, add, update, remove
 }

@@ -7,10 +7,10 @@ async function getAllData () {
 }
 
 async function getDataByUser () {
-	return dataDao.join(model.modelData, { a: { path: 'sensorID', populate: { path: 'typeID', model: model.modelSensor } }, b: { path: 'userID' }, c: "" })
+	return dataDao.join(model.modelData, {}, { a: { path: 'sensorID', populate: { path: 'typeID', model: model.modelSensor } }, b: "", c: "" })
 }
 
-async function setData (data) {
+async function set (data) {
 	let giletid = data.giletid
 	usersDao.getAll({ "giletid" : giletid }).then(function(id) {
 		let idUser = id.idUser
@@ -33,5 +33,5 @@ async function setData (data) {
 }
 
 module.exports = {
-  getAllData, getDataByUser, setData
+  getAllData, getDataByUser, set
 }

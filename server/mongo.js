@@ -130,13 +130,13 @@ let all = (name, query) => {
 }
 
 // set of rows read
-let join = (name, model, pop) => {
+let join = (name, model, query, pop) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
         if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
-        model.find({}).populate(pop.a).populate(pop.b).populate(pop.c).exec((err, result) => {
+        model.find(query).populate(pop.a).populate(pop.b).exec((err, result) => {
           if (err) { reject(new DatabaseRequestError(JSON.stringify(pop), err)) }
           resolve(result)
         })

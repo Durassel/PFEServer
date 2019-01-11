@@ -20,8 +20,8 @@ async function remove (data) {
   	return mongo.remove("data", data)
 }
 
-async function join (model, data) {
-  	return mongo.join("data", model, data)
+async function join (model, query, data) {
+  	return mongo.join("data", model, query, data)
 }
 
 module.exports = {

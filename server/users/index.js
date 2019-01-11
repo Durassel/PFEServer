@@ -11,7 +11,8 @@ const saltRounds    = 10 // Used by bcrypt
 passport.use(new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
   try {
     // Find user in the database
-    users.getUserByUsername(username).then(function(user) {
+    users.getUserByUsername(username).then(function(result) {
+      let user = !result[0] ? null : result[0] // Returns an array
       if (user === null) {
         return done(null, false);
       } else {
@@ -78,10 +79,18 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+router.get('/all/data', async (req, res, next) => {
+  try {
+    res.send(await users.getAllUsersData())
+  } catch (err) {
+    return next(err)
+  }
+})
+
 router.get('/team/:name', async (req, res, next) => {
   try {
-    let list = await users.getUsersByTeam()
-    list = list.filter(x => x.teamID.name == req.params.name) // Keep only 'Team 1' users for example
+    let list = await users.getAllUsersData()
+    list = list.filter(x => x.teamID && x.teamID.name == req.params.name) // Keep only 'Team 1' users for example
     res.send(list)
   } catch (err) {
     return next(err)
@@ -90,8 +99,8 @@ router.get('/team/:name', async (req, res, next) => {
 
 router.get('/jacket/:name', async (req, res, next) => {
   try {
-    let list = await users.getUsersByJacket()
-    list = list.filter(x => x.jacketID.name == req.params.name) // Keep only 'Jacket 1' user for example
+    let list = await users.getAllUsersData()
+    list = list.filter(x => x.jacketID && x.jacketID.name == req.params.name) // Keep only 'Jacket 1' user for example
     res.send(list)
   } catch (err) {
     return next(err)
@@ -100,8 +109,8 @@ router.get('/jacket/:name', async (req, res, next) => {
 
 router.get('/job/:name', async (req, res, next) => {
   try {
-    let list = await users.getUsersByJob()
-    list = list.filter(x => x.jobID.name == req.params.name) // Keep only 'member' users for example
+    let list = await users.getAllUsersData()
+    list = list.filter(x => x.jobID && x.jobID.name == req.params.name) // Keep only 'member' users for example
     res.send(list)
   } catch (err) {
     return next(err)
