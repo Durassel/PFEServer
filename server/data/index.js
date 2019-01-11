@@ -13,7 +13,7 @@ router.get('/all', async (req, res, next) => {
 router.get('/user/:name', async (req, res, next) => {
   try {
     let list = await data.getDataByUser()
-    list = list.filter(x => x.userID.username == req.params.name) // Keep only 'Data' from user for example
+    list = list.filter(x => x.userID._id == req.params.name) // Keep only 'Data' from user for example
     res.send(list)
   } catch (err) {
     return next(err)

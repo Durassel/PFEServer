@@ -10,6 +10,10 @@ async function getJacketByUserId (data) {
 	return jacketsDao.get({ "userID" : mongoose.Types.ObjectId(data) })
 }
 
+async function getJacketByIdentifier (data) {
+	return jacketsDao.get({ "identifier" : data })
+}
+
 async function add (data) {
 	let jacket = model.jackets({
 		userID    : mongoose.Types.ObjectId(data.userID),

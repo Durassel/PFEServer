@@ -25,7 +25,7 @@ const jobSchema = new schema({
 
 const sensorsSchema = new schema({
   type   :{type: String, unique: true, required: true},
-  active :{type: Boolean, required: true}
+  code   :{type: String, unique: true, required: true}
 })
 
 const coordinateSchema = new schema({
@@ -37,7 +37,7 @@ const coordinateSchema = new schema({
 const dataSchema = new schema({
   sensorID   :{type: mongoose.Schema.ObjectId, ref: 'sensors', required: true},
   userID     :{type: mongoose.Schema.ObjectId, ref: 'users', required: true},
-  date       :{type: Date, required: true},
+  date       :{type: Date, default: Date.now, required: true},
   coordinates:[coordinateSchema]
 }, { collection: 'data' })
 
