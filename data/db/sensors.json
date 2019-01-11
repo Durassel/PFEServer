@@ -1,2 +1,2 @@
-{"_id":{"$oid":"5bf50f1015fbeb28dc9c9d48"},"type":"Back curve","active":true}
-{"_id":{"$oid":"5c29195ae4217127dc93b7d0"},"type":"UV","active":true}
+{"_id":{"$oid":"5bf50f1015fbeb28dc9c9d48"},"type":"Back curve","code":"0"}
+{"_id":{"$oid":"5c29195ae4217127dc93b7d0"},"type":"UV","code":"1"}

@@ -1,2 +1,3 @@
-{"_id":{"$oid":"5bf282d49b01f5262cca3d60"},"username":"fred","password":"$2a$10$b0ac6IHH14pNUbytg6RyOu2ZJtjJOzyUsUg5AfuYFV7R3NLgVVrq2","teamID":{"$oid":"5c2cc93ce8044343c01f26bb"},"jobID":{"$oid":"5bf50f6e15fbeb28dc9c9d4a"}}
-{"_id":{"$oid":"5c28ede8e4217127dc93b7ca"},"username":"alexis","password":"$2a$10$c9axUCwQHdysPZktpZFN.uKirV1NEtHSBdk2a54jsRXphXFeHxIqS","teamID":{"$oid":"5c2cc93ce8044343c01f26bb"},"jobID":{"$oid":"5bf50f7e15fbeb28dc9c9d4b"}}
+{"_id":{"$oid":"5bf282d49b01f5262cca3d60"},"username":"fred","password":"$2a$10$b0ac6IHH14pNUbytg6RyOu2ZJtjJOzyUsUg5AfuYFV7R3NLgVVrq2","jobID":{"$oid":"5bf50f6e15fbeb28dc9c9d4a"}}
+{"_id":{"$oid":"5c28ede8e4217127dc93b7ca"},"username":"alexis","password":"$2a$10$c9axUCwQHdysPZktpZFN.uKirV1NEtHSBdk2a54jsRXphXFeHxIqS","teamID":{"$oid":"5c2c7e006dc21929e48e233d"},"jobID":{"$oid":"5bf50f8d15fbeb28dc9c9d4c"}}
+{"_id":{"$oid":"5c34e7b43cc33c2a1475e596"},"username":"davy","password":"$2b$10$LsknlIRCx5HEO6RCOh789.xd9Wwfh.iz.3u3UdNeWq9/iER/4QGq6","teamID":{"$oid":"5c2c7e006dc21929e48e233d"},"jobID":{"$oid":"5bf50f7e15fbeb28dc9c9d4b"}}
