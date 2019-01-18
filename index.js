@@ -10,9 +10,9 @@ const passport     = require('passport');
 const cors         = require('cors')
 const logger       = require('./server/utils/logger')
 const errorHandler = require('./server/utils/errors').errorHandler
-const mqtt = require('mqtt')
-const gateway = mqtt.connect('mqtt://192.168.43.147')
-const data = require('./server/data/data')
+const mqtt         = require('mqtt')
+const gateway      = mqtt.connect('mqtt://192.168.43.147')
+const data         = require('./server/data/data')
 
 require('dotenv').config()
 
@@ -64,13 +64,13 @@ app.listen(process.env.WEB_PORT, () => {
 
 
 gateway.on('connect', () => {
-  gateway.subscribe('gilet/setData')
+  gateway.subscribe('data/set')
 })
 
 gateway.on('message', (topic, message) => {
   switch (topic) {
-    case 'gilet/setData':
-    	return data.setData(/*JSON.stringify(*/JSON.parse(message.toString('utf8')))
+    case 'data/set':
+    	return data.set(JSON.parse(message.toString('utf8')))
   }
   console.log('No handler for topic %s', topic)
 })
