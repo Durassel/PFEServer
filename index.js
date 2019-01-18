@@ -5,6 +5,9 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const logger = require('./server/utils/logger')
 const errorHandler = require('./server/utils/errors').errorHandler
+const mqtt = require('mqtt')
+const gateway = mqtt.connect('mqtt://192.168.43.147')
+const data = require('./server/data/data')
 
 require('dotenv').config()
 
@@ -27,6 +30,20 @@ app.use('/', async (req, res) => {
 // Call error handlers
 app.use(errorHandler)
 
-app.listen(process.env.WEB_PORT || 3005 , () => {
+app.listen(process.env.WEB_PORT, () => {
   console.log(`App is listening on port ${process.env.WEB_PORT}`)
 })
+
+
+gateway.on('connect', () => {
+  gateway.subscribe('gilet/setData')
+})
+
+gateway.on('message', (topic, message) => {
+  switch (topic) {
+    case 'gilet/setData':
+    	return data.setData(/*JSON.stringify(*/JSON.parse(message.toString('utf8')))
+  }
+  console.log('No handler for topic %s', topic)
+})
+

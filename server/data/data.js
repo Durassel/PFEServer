@@ -22,8 +22,9 @@ async function getDataByIdUser (id) {
 }
 
 async function setData (data) {
+	  console.log('set data :', data)
 	let giletid =  data.giletid
-	usersDao.getUserByIdGilet(giletid).then(function(id) {
+	usersDao.getUserByIdGilet({ "giletid" : giletid}).then(function(id) {
 		let idUser =  id.idUser
 
 		data.global.forEach(function(global) {
