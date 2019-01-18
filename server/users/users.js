@@ -1,44 +1,52 @@
-let usersDao = require('./users.dao')
-let model = require('../model')
+let usersDao     = require('./users.dao')
+let jacketsDao   = require('../jackets/jackets.dao')
+let dataDao      = require('../data/data.dao')
+let model        = require('../model')
+let mongoose     = require('mongoose')
+let bcrypt       = require('bcrypt')
+const saltRounds = 10 // Used by bcrypt
 
-async function getUsers () {
-  	return usersDao.getUsers()
+async function getAllUsers () {
+  	return usersDao.getAll({})
 }
 
-async function getUserByIdGilet (data) {
-	return usersDao.getUserByIdGilet({ "giletid" : data })
+async function getUserByUserId (data) {
+	return usersDao.get({ "_id" : mongoose.Types.ObjectId(data) })
 }
 
-async function userLogin (data) {
-  	return usersDao.userLogin({ "idUser": data.idUser, "password": data.password })
+async function getUserByUsername (data) {
+	return usersDao.join(model.modelUser, { "username" : data }, { a: "jobID", b: "teamID", c: "" })
 }
 
-async function addUser (data) {
-	let event = model.users({
-		idUser   : data.idUser,
-		giletid  : data.giletid,
-		job      : data.job
-	})
-
-	return usersDao.addUser(event)
+async function getAllUsersData () {
+	return usersDao.join(model.modelUser, {}, { a: { path: 'jobID', populate: { path: 'jobID', model: model.modelJob } }, b: { path: 'teamID', populate: { path: 'teamID', model: model.modelTeam } }, c: "" })
 }
 
-async function delUser (data) {
-  	return usersDao.delUser({idUser: data})
+async function add (data) {
+	bcrypt.hash(data.password, saltRounds).then(function(hash) {
+		let user = model.users({
+			username: data.username,
+			password: hash,
+			teamID  : data.teamID,
+			jobID   : data.jobID
+		})
+
+		return usersDao.set(user)
+	});
 }
 
-async function chgGilet (data) {
- 	return usersDao.chgGilet({ 'idUser' : data.idUser, 'job' : '1' }, { 'giletid' : data.giletid })
+async function update (data) {
+	// To do : update password if not null / undefined
+ 	return usersDao.update({ '_id' : mongoose.Types.ObjectId(data._id) }, { 'username' : data.username, 'teamID' : mongoose.Types.ObjectId(data.teamID), 'jobID' : mongoose.Types.ObjectId(data.jobID) })
 }
 
-async function chgUser (data) {
-  	return usersDao.chgUser({ 'idUser' : data.idUser }, { 'giletid' : data.giletid, 'job' : data.job })
-}
-
-async function chgPassword (data) {
-  	return usersDao.chgPassword({ 'idUser' : data.idUser }, { 'password' : data.password })
+async function remove (data) {
+	// Delete all data / jacket related to the user
+	jacketsDao.remove({ 'userID': mongoose.Types.ObjectId(data._id) })
+	dataDao.remove({ 'userID': mongoose.Types.ObjectId(data._id) })
+  	return usersDao.remove({ "_id": mongoose.Types.ObjectId(data._id) })
 }
 
 module.exports = {
-  getUsers, getUserByIdGilet, userLogin, addUser, delUser, chgGilet, chgUser, chgPassword
+  getAllUsers, getUserByUserId, getUserByUsername, getAllUsersData, add, update, remove
 }

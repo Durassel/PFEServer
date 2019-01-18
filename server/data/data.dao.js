@@ -1,18 +1,29 @@
 const mongo = require('../mongo')
-const usersDao = require('../users/users.dao')
 
-async function getData (data) {
-  	return await mongo.all("data", data)
+async function getAll (data) {
+  	return mongo.all("data", data)
 }
 
-async function getDataByIdUser (data) {
-  	return await mongo.all("data", data)
+async function get (data) {
+  	return mongo.get("data", data)
 }
 
-async function setData (data) {
+async function update (id, data) {
+  	return mongo.update("data", id, data)
+}
+
+async function set (data) {
   	return mongo.insert("data", data)
 }
 
+async function remove (data) {
+  	return mongo.remove("data", data)
+}
+
+async function join (model, query, data) {
+  	return mongo.join("data", model, query, data)
+}
+
 module.exports = {
-  getData, getDataByIdUser, setData
+  	getAll, get, update, set, remove, join
 }

@@ -1,6 +1,14 @@
-let usersDao = require('./jobs.dao')
+let jobsDao = require('./jobs.dao')
 let model = require('../model')
 
-module.exports = {
+async function getAllJobs () {
+  	return jobsDao.getAll({})
+}
 
+async function getJobsByLevelLessThan (id) {
+	return jobsDao.getAll({ level: {$lte: id} })
+}
+
+module.exports = {
+	getAllJobs, getJobsByLevelLessThan
 }

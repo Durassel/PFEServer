@@ -1,5 +1,3 @@
-{"_id":{"$oid":"5bf14c3dd300953828a3d91b"},"idUser":"9512357","giletid":"0123456789","job":"1"}
-{"_id":{"$oid":"5bf14caed300953828a3d91c"},"idUser":"357159","giletid":"9876543210","job":"1"}
-{"_id":{"$oid":"5bf282d49b01f5262cca3d60"},"idUser":"fredoCodeur","password":"sopra","job":"2"}
-{"_id":{"$oid":"5bf283239b01f5262cca3d61"},"idUser":"bob","password":"123","job":"0"}
-{"_id":{"$oid":"5bf43e9214db8e0d78fcee2f"},"idUser":"45","job":"2","password":"a","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5bf282d49b01f5262cca3d60"},"username":"fred","password":"$2a$10$b0ac6IHH14pNUbytg6RyOu2ZJtjJOzyUsUg5AfuYFV7R3NLgVVrq2","jobID":{"$oid":"5bf50f6e15fbeb28dc9c9d4a"}}
+{"_id":{"$oid":"5c28ede8e4217127dc93b7ca"},"username":"alexis","password":"$2a$10$c9axUCwQHdysPZktpZFN.uKirV1NEtHSBdk2a54jsRXphXFeHxIqS","teamID":{"$oid":"5c2c7e006dc21929e48e233d"},"jobID":{"$oid":"5bf50f8d15fbeb28dc9c9d4c"}}
+{"_id":{"$oid":"5c34e7b43cc33c2a1475e596"},"username":"davy","password":"$2b$10$LsknlIRCx5HEO6RCOh789.xd9Wwfh.iz.3u3UdNeWq9/iER/4QGq6","teamID":{"$oid":"5c2c7e006dc21929e48e233d"},"jobID":{"$oid":"5bf50f7e15fbeb28dc9c9d4b"}}

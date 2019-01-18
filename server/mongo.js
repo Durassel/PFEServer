@@ -24,15 +24,15 @@ let insert = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) reject(new DatabaseRequestError(collection, err));
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.insertOne(query, function(error, result) {
-          if (error) reject(new DatabaseRequestError(collection, error));
-          resolve("true")
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          resolve(result.ops[0])
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(collection + ' : ' + params, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -42,15 +42,33 @@ let update = (name, id, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) reject(new DatabaseRequestError(collection, err));
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
-        collection.findOneAndUpdate(id, { $set: query }, { upsert: true }, function(error, result) {
-          if (error) reject(new DatabaseRequestError(collection, error));
+        collection.findOneAndUpdate(id, { $set: query }, { upsert: true, new: true }, function(error, result) {
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
           resolve(result.value)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(collection + ' : ' + params, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
+    }
+  })
+}
+
+// Update all
+let updateAll = (name, id, query) => {
+  return new Promise((resolve, reject) => {
+    try {
+      this.database.db.collection(name, function (err, collection) {
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
+
+        collection.updateMany(id, { $set: query }, function(error, result) {
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          resolve(result.value)
+        });
+      });
+    } catch (e) {
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -60,15 +78,15 @@ let remove = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) reject(new DatabaseRequestError(collection, err));
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.deleteOne(query, function(error, result) {
-          if (error) reject(new DatabaseRequestError(collection, error));
-          resolve("true")
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          resolve(result)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(collection + ' : ' + params, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -78,16 +96,16 @@ let get = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) reject(new DatabaseRequestError(collection, err));
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.findOne(query, function(error, result) {
-          if (error) reject(new DatabaseRequestError(collection, error));
-          if (!result) { reject(new EmptyResultError(collection)) }
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          // if (!result) { reject(new EmptyResultError(JSON.stringify(query))) }
           resolve(result)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(collection + ' : ' + params, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
     }
   })
 }
@@ -97,16 +115,34 @@ let all = (name, query) => {
   return new Promise((resolve, reject) => {
     try {
       this.database.db.collection(name, function (err, collection) {
-        if (err) reject(new DatabaseRequestError(collection, err));
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
 
         collection.find(query).toArray(function(error, result) {
-          if (error) reject(new DatabaseRequestError(collection, error));
-          if (!result.length) { reject(new EmptyResultError(collection)) }
+          if (error) { reject(new DatabaseRequestError(JSON.stringify(query), error)) }
+          // if (!result.length) { reject(new EmptyResultError(JSON.stringify(query))) }
           resolve(result)
         });
       });
     } catch (e) {
-      reject(new DatabaseRequestError(name + ' : ' + query, e.message))
+      reject(new DatabaseRequestError(JSON.stringify(query), e.message))
+    }
+  })
+}
+
+// set of rows read
+let join = (name, model, query, pop) => {
+  return new Promise((resolve, reject) => {
+    try {
+      this.database.db.collection(name, function (err, collection) {
+        if (err) { reject(new DatabaseRequestError(JSON.stringify(query), err)) }
+
+        model.find(query).populate(pop.a).populate(pop.b).exec((err, result) => {
+          if (err) { reject(new DatabaseRequestError(JSON.stringify(pop), err)) }
+          resolve(result)
+        })
+      });
+    } catch (e) {
+      reject(new DatabaseRequestError(JSON.stringify(pop), e.message))
     }
   })
 }
@@ -118,5 +154,5 @@ try {
 }
 
 module.exports = {
-  all, get, insert, update, remove
+  all, get, insert, update, updateAll, remove, join
 }

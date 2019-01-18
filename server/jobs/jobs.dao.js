@@ -1,9 +1,9 @@
 const mongo = require('../mongo')
 
-async function getJob (data) {
+async function getAll (data) {
   	return mongo.all("jobs", data)
 }
 
 module.exports = {
-  getJob
+  	getAll
 }

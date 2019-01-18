@@ -46,7 +46,7 @@ We have preconfigured the project with a simple development web server. The simp
 this server is:
 
 ```
-nodemon index.js
+npm run dev:server
 ```
 
 Now browse to the app at [`localhost:3005`][local-app-url].

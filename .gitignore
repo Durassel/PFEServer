@@ -2,6 +2,9 @@
 # Created by https://www.gitignore.io/api/node,webstorm
 
 ### Node ###
+# Sessions
+sessions/
+
 # Logs
 logs
 *.log
